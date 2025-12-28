@@ -1,0 +1,5 @@
+[ELK Stack Insallation] : (https://www.elastic.co/docs/deploy-manage/deploy/self-managed/installing-elasticsearch)
+[MERN Stack Implementation] : (https://www.corbado.com/blog/react-express-crud-app-mysql)
+[For modsecurity implementation] (https://www.linode.com/docs/guides/securing-nginx-with-modsecurity/)
+[ELK stack installation] (https://logz.io/learn/complete-guide-elk-stack/)
+[ORM Express Mysql] (https://www.freecodecamp.org/news/object-relational-mapping-in-nodejs-with-sequelize-orm/)

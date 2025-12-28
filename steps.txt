@@ -1,0 +1,7 @@
+create container for backend : express
+create container for front-end : react
+create container for database : mariadb
+create container for proxy : nginx
+create container for elasticsearch
+create container for kibana 
+create container for logstash
