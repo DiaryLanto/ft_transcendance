@@ -1,0 +1,32 @@
+services:
+  nginx:
+    build: 
+      context: services/nginx/
+      args:
+        NODE_VERSION: '${NODE_VERSION}'
+        NGINX_PORT: '${NGINX_PORT}'
+    image: '${NGINX_NAME}'
+    container_name: '${NGINX_NAME}'
+    networks:
+      - trans_net
+    ports:
+      - 8080:${NGINX_PORT}
+  express:
+    build: 
+      context: services/express/
+    image: '${EXPRESS_NAME}'
+    container_name: '${EXPRESS_NAME}'
+    networks:
+      - trans_net
+  mariadb:
+    image: mariadb:12.1.2
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: "azerty"
+      MARIADB_DATABASE: "test_db"
+      MARIADB_USER: "derakoto"
+      MARIADB_PASSWORD: "azerty"
+    ports:
+      - "3306:3306"
+networks:
+  trans_net:
