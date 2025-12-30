@@ -1,0 +1,22 @@
+# Use a lightweight Node.js image for building (customizable via ARG)
+ARG NODE_VERSION
+ARG DEV_PORT
+
+FROM node:${NODE_VERSION} AS builder
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package-related files first to leverage Docker's caching mechanism
+COPY reactjs-files/package.json reactjs-files/package-lock.json ./
+
+# Install project dependencies using npm ci (ensures a clean, reproducible install)
+RUN --mount=type=cache,target=/root/.npm npm ci
+
+# Copy the rest of the application source code into the container
+COPY reactjs-files .
+
+EXPOSE ${DEV_PORT}
+
+# Build the React.js application (outputs to /app/dist)
+CMD npm run dev
