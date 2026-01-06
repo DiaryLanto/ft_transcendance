@@ -1,5 +1,6 @@
 # Use a lightweight Node.js image for building (customizable via ARG)
 ARG NODE_VERSION
+ARG NGINX_VERSION
 ARG NGINX_PORT
 
 FROM node:${NODE_VERSION} AS builder
@@ -19,7 +20,7 @@ COPY reactjs-files .
 # Build the React.js application (outputs to /app/dist)
 RUN npm run build
 
-FROM nginx
+FROM nginx:${NGINX_VERSION}
 
 ARG NGINX_PORT
 
