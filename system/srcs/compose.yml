@@ -1,4 +1,25 @@
 services:
+  express_dev:
+    image: '${EXPRESS_NAME}_dev'
+    container_name: '${EXPRESS_NAME}_dev'
+    build:
+      context: services/express/
+      dockerfile: Dockerfile.dev
+      args:
+        NODE_VERSION: '${NODE_VERSION}'
+        DEV_PORT: '${DEV_PORT}'
+    volumes:
+      - ./services/express/app/src:/app/src
+    networks:
+      - trans_net
+    ports:
+      - 8082:8080
+    environment:
+      MARIADB_ROOT_PASSWORD: '${MARIADB_ROOT_PASSWORD}'
+      MARIADB_DATABASE: '${MARIADB_DATABASE}'
+      MARIADB_USER: '${MARIADB_USER}'
+      MARIADB_PASSWORD: '${MARIADB_PASSWORD}'
+      DB_HOST: '${DB_NAME}'
   react_dev:
     image: '${NGINX_NAME}_dev'
     container_name: '${NGINX_NAME}_dev'
@@ -36,6 +57,11 @@ services:
       context: services/express/
     image: '${EXPRESS_NAME}'
     container_name: '${EXPRESS_NAME}'
+    environment:
+      MARIADB_ROOT_PASSWORD: '${MARIADB_ROOT_PASSWORD}'
+      MARIADB_DATABASE: '${MARIADB_DATABASE}'
+      MARIADB_USER: '${MARIADB_USER}'
+      MARIADB_PASSWORD: '${MARIADB_PASSWORD}'
     networks:
       - trans_net
   mariadb:
@@ -43,11 +69,14 @@ services:
     container_name: '${DB_NAME}'
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: "azerty"
-      MARIADB_DATABASE: "test_db"
-      MARIADB_USER: "derakoto"
-      MARIADB_PASSWORD: "azerty"
+      MARIADB_ROOT_PASSWORD: '${MARIADB_ROOT_PASSWORD}'
+      MARIADB_DATABASE: '${MARIADB_DATABASE}'
+      MARIADB_USER: '${MARIADB_USER}'
+      MARIADB_PASSWORD: '${MARIADB_PASSWORD}'
     ports:
       - "3306:3306"
+    networks:
+      - trans_net
+
 networks:
   trans_net:
