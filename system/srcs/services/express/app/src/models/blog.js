@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const Blog = sequelize.define("Blog", {
-    blog_id: {
+    id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUID4,
         primaryKey: true

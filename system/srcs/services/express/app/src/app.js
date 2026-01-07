@@ -2,25 +2,16 @@
 const express = require('express');
 const app = express();
 const port = 8080;
-const Sequelize = require("sequelize");
-
-const db_name = process.env.MARIADB_DATABASE;
-const db_user = process.env.MARIADB_USER
-const db_pwd = process.env.MARIADB_PASSWORD
-const db_host = process.env.DB_HOST;
-
-const sequelize = new Sequelize(
-  db_name,
-  db_user,
-  db_pwd,
-  {
-    host: db_host,
-    dialect: 'mariadb'
-  }
-)
+const { sequelize } = require("./models");
 
 sequelize.authenticate().then(() => {
   console.log("Connection to database has been established.");
+  sequelize.sync().then(() => {
+    console.log('Migrated successfully');
+  }).catch((error) => {
+    console.log('Error during migration', error);
+  }
+  );
 }).catch((error) => {
   console.log('Unable to connect to database: ',error);
 });
