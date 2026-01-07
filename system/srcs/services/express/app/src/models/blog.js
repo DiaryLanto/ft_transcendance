@@ -1,7 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require('../config/database');
-
-const Blog = sequelize.define("Blog", {
+module.exports = (sequelize, DataTypes) => {
+    const Blog = sequelize.define("Blog", {
     blog_id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUID4,
@@ -18,10 +16,8 @@ const Blog = sequelize.define("Blog", {
     },
     description: {
         type: DataTypes.TEXT('tiny')
-    },
-    // user_id: {
-
-    // }
+    }
 });
 
-module.exports = Blog;
+ return Blog;
+}

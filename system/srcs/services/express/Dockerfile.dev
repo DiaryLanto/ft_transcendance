@@ -6,8 +6,6 @@ COPY app/ .
 
 RUN npm install
 
-RUN npm install express sequelize 
-
 EXPOSE 8080
 
 CMD ["npm","run","dev"]
