@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
     const Post = sequelize.define("Post", {
         id: {
             type: DataTypes.UUID,
-            defaultValue: DataTypes.UUID4,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true
         },
         title: {
