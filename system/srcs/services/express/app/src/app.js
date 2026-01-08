@@ -3,23 +3,21 @@ const express = require('express');
 const app = express();
 const port = 8080;
 const { sequelize, User } = require("./models");
+const user_router = require('./routes/user-routes');
+const blog_router = require('./routes/blog-routes');
+const post_router = require('./routes/post-routes');
+const comment_router = require('./routes/comment-routes');
+
+app.use(express.json());
+
+app.use('/users', user_router);
+app.use('/blogs', blog_router);
+app.use('/posts', post_router);
+app.use('/comments', comment_router);
+
 
 sequelize.authenticate().then(() => {
   console.log("Connection to database has been established.");
-  // sequelize.sync().then(() => {
-  //   console.log('Migrated successfully');
-  // }).catch((error) => {
-  //   console.log('Error during migration', error);
-  // }
-  // );
-  User.create(
-    {
-      login: "fralaima",
-      bio: "I am an electronic engineer",
-      password: "azerty",
-      email: "rakoto@gmail.com"
-    }
-  );
 }).catch((error) => {
   console.log('Unable to connect to database: ',error);
 });
