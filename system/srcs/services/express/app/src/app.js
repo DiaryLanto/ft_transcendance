@@ -18,6 +18,11 @@ app.use('/comments', comment_router);
 
 sequelize.authenticate().then(() => {
   console.log("Connection to database has been established.");
+  sequelize.sync().then(() => {
+    console.log("Database synced");
+  }).catch((error) => {
+    console.log(error);
+  });
 }).catch((error) => {
   console.log('Unable to connect to database: ',error);
 });

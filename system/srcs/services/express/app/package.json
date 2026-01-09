@@ -8,7 +8,9 @@
     "dev": "nodemon src/app.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "express": "^4.22.1",
+    "express-validator": "^7.3.1",
     "mariadb": "^3.4.5",
     "nodemon": "^3.1.11",
     "sequelize": "^6.37.7"

@@ -1,11 +1,9 @@
 const user_router = require('express').Router()
-
+const user_validator = require('../validators/users-validator');
+const signup = require('../controllers/users-controller');
 //Create
 
-user_router.post("/new", (req, res) => {
-    const name = req.body.nom;
-    res.send(`Create new user ${name}`);
-});
+user_router.post("/signup", user_validator, signup);
 
 
 //Read
