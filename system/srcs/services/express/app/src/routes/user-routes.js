@@ -1,9 +1,10 @@
 const user_router = require('express').Router()
 const user_validator = require('../validators/users-validator');
 const signup = require('../controllers/users-controller');
+const error_checker = require('../validators/error-checking-validator');
 //Create
 
-user_router.post("/signup", user_validator, signup);
+user_router.post("/signup", user_validator, error_checker, signup);
 
 
 //Read
