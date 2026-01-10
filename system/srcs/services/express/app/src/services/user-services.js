@@ -2,7 +2,7 @@ const {User} = require("../models");
 const bcrypt = require("bcrypt");
 const {Op} = require('sequelize');
 
-const signup_user = async ({login, email, passwd}) => {
+const signupUser = async ({login, email, passwd}) => {
     try
     {
         const user = await User.findOne({
@@ -32,4 +32,24 @@ const signup_user = async ({login, email, passwd}) => {
     }
 }
 
-module.exports = signup_user;
+const loginUser = async ({login, passwd}) => {
+    
+    const error = new Error('Bad credential');
+    error.status = 401;
+
+    const client = await User.findOne({
+        where : {login: login}
+    });
+    if (client)
+    {
+        
+        console.log('User logged in');
+    }
+    else
+        throw error;
+}
+
+module.exports = { 
+    signupUser,
+    loginUser
+};

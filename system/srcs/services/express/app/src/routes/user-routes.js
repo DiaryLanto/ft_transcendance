@@ -1,13 +1,15 @@
 const user_router = require('express').Router()
-const user_validator = require('../validators/users-validator');
-const signup = require('../controllers/users-controller');
-const error_checker = require('../validators/error-checking-validator');
+const user_validator = require('../middlewares/users-validator');
+const {signup, login} = require('../controllers/users-controller');
+const error_checker = require('../middlewares/error-checking-validator');
 //Create
-
 user_router.post("/signup", user_validator, error_checker, signup);
 
 
 //Read
+
+user_router.post("/login", login);
+
 user_router.get('/', (req, res) => {
     const id = req.params.id;
     res.send(`GET all Users`);
