@@ -1,6 +1,7 @@
 const {User} = require("../models");
 const bcrypt = require("bcrypt");
 const {Op} = require('sequelize');
+const {SignJWT} = require('jose');
 
 const signupUser = async ({login, email, passwd}) => {
     try
@@ -33,20 +34,29 @@ const signupUser = async ({login, email, passwd}) => {
 }
 
 const loginUser = async ({login, passwd}) => {
-    
+    const  secret = new TextEncoder().encode("secret_test");
     const error = new Error('Bad credential');
     error.status = 401;
 
     const client = await User.findOne({
         where : {login: login}
     });
-    if (client)
-    {
-        
-        console.log('User logged in');
-    }
-    else
+    if (!client)
         throw error;
+    const matched = await bcrypt.compare(passwd, client.password);
+    if (!matched)
+        throw error;
+    
+    const token = await new SignJWT({ sub: client.login, email: client.email })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('15m')
+    .sign(secret);
+
+    return {
+        client,
+        token
+    };
 }
 
 module.exports = { 
