@@ -47,7 +47,7 @@ const loginUser = async ({login, passwd}) => {
     if (!matched)
         throw error;
     
-    const token = await new SignJWT({ sub: client.login, email: client.email })
+    const token = await new SignJWT({ sub: client.id, login: client.login, email: client.email })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('15m')

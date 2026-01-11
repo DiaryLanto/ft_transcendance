@@ -8,7 +8,13 @@ const Comment = require('./comments')(sequelize, DataTypes);
 
 /** USER and BLOG relation **/
 User.hasMany(Blog);
-Blog.belongsTo(User);
+Blog.belongsTo(User, {
+    foreingKey: {
+        name: "userId",
+        allowNull: false
+    },
+    onDelete: "CASCADE" 
+});
 
 /** BLOG and POST relation **/
 Blog.hasMany(Post);

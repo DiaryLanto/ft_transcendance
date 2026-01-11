@@ -1,9 +1,11 @@
+const error_checker = require('../middlewares/error-checking-validator');
 const blog_router = require('express').Router();
+const blog_validator = require("../middlewares/blog-validator");
+const auth_validation = require("../middlewares/auth-middleware-validation");
+const createBlog = require("../controllers/blogs-controller");
 
 // C
-blog_router.post("/new", (req, res) => {
-    res.send("Create new blog");
-});
+blog_router.post("/new", auth_validation,blog_validator, error_checker, createBlog);
 // R
 blog_router.get("/", (req, res) => {
     res.send("GET all blogs");
