@@ -1,10 +1,11 @@
 const comment_router = require('express').Router();
+const auth_validation = require('../middlewares/auth-middleware-validation');
+const commentValidator = require('../middlewares/comment-middleware');
+const error_checker = require('../middlewares/error-checking-validator');
+const createPost = require('../controllers/comments-controller');
 
-// C
-comment_router.post("/new", (req, res) => {
-    res.send("Create new comment");
-});
-// R
+comment_router.post("/new", auth_validation, commentValidator, error_checker, createPost);
+
 comment_router.get("/", (req, res) => {
     res.send("GET all comments");
 });
