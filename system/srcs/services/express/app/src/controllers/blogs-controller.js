@@ -1,5 +1,5 @@
 const {User} =require ("../models");
-const newBlog = require("../services/blog-services");
+const {newBlog, getAllBlogFromDB} = require("../services/blog-services");
 
 const createBlog = async (req, res, next) => {
     try {
@@ -11,4 +11,17 @@ const createBlog = async (req, res, next) => {
     }
 }
 
-module.exports = createBlog;
+const getAllBlog = async (req, res, next) => {
+    try {
+        const blogs = await getAllBlogFromDB(req);
+        res.status(200).json({data: blogs});
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({error : "Failed to fetch all the blogs"});
+    }
+}
+
+module.exports = {
+    createBlog,
+    getAllBlog
+};
