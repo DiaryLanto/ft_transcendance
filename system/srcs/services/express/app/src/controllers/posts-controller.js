@@ -1,5 +1,6 @@
 const { post } = require("../routes/post-routes");
 const {newPost, getBlogPosts, getPost, deletePostService} = require("../services/post-services")
+const AppError = require('../errors/appError');
 
 const createPost = async (req, res) => {
     try {
@@ -47,7 +48,8 @@ const deletePost = async (req, res, next) =>{
         res.status(200).json({message: "deleted"});
     } catch (error) {
         console.log(error);
-        res.status(501).json({error: "Internal server error"});
+        next(error);
+        // res.status(501).json({error: "Internal server error"});
     }
 }
 

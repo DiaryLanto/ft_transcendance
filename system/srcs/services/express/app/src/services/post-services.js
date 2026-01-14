@@ -1,4 +1,5 @@
 const {Post, Blog} = require("../models");
+const AppError = require('../errors/appError');
 
 const newPost = async (req) => {
     const blog = await Blog.findByPk(req.body.blog);
@@ -53,14 +54,12 @@ const deletePostService = async (post_id, user_id) => {
 
     if (!post)
     {
-        const error = new Error ("Post not found");
-        error.status = 404;
+        const error = new AppError (404, "Post not found");
         throw (error);
     }
     if (post.Blog.UserId !== user_id)
     {
-        const error = new Error ("Forbidden");
-        error.status = 403;
+        const error = new AppError (403, "Forbidden");
         throw (error);
     }
     await post.destroy();
