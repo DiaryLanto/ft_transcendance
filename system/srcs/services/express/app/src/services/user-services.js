@@ -2,41 +2,33 @@ const {User} = require("../models");
 const bcrypt = require("bcrypt");
 const {Op} = require('sequelize');
 const {SignJWT} = require('jose');
+const AppError = require("../errors/appError");
 
 const signupUser = async ({login, email, passwd}) => {
-    try
-    {
-        const user = await User.findOne({
-            where: {
-                [Op.or]: [
-                    {login: login},
-                    {email: email}
-                ]
-            }
-        });
-        if (user)
-        {
-            const error = new Error("login or email already in use");
-            error.status = 401;
-            throw error;
+    const user = await User.findOne({
+        where: {
+            [Op.or]: [
+                {login: login},
+                {email: email}
+            ]
         }
-        const hashedPassword = await bcrypt.hash(passwd, 10);         
-        await User.create({
-        login: login,
-        email: email,
-        password: hashedPassword
-        });
-    }
-    catch (error)
+    });
+    if (user)
     {
-        throw (error);
+        const error = new AppError(401, "login or email already in use");
+        throw error;
     }
+    const hashedPassword = await bcrypt.hash(passwd, 10);         
+    await User.create({
+    login: login,
+    email: email,
+    password: hashedPassword
+    });
 }
 
 const loginUser = async ({login, passwd}) => {
     const  secret = new TextEncoder().encode("secret_test");
-    const error = new Error('Bad credential');
-    error.status = 401;
+    const error = new AppError(401, 'Bad credential');
 
     const client = await User.findOne({
         where : {login: login}
