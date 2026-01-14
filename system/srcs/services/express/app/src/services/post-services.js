@@ -7,18 +7,9 @@ const newPost = async (req) => {
     console.log(blog.id);
     
     if (!blog)
-    {
-        const error = new Error ("Blog not found");
-        error.status = 404;
-        throw error;
-    }
+        throw (new AppError(404, "Blog not found"));
     if (req.user.sub != blog.UserId)
-    {
-        const error = new Error ("Forbidden");
-        error.status = 403;
-        throw error;
-    }
-
+        throw (new AppError(403, "Forbidden"));
     await Post.create( {
         title: req.body.title,
         content: req.body.content,

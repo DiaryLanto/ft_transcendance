@@ -14,7 +14,7 @@ const auth_validation = async (req, res, next) => {
         req.user = payload;
         next();
     } catch (error) {
-        console.log(error); // Debbug
+        console.log(error);
         res.status(401).json({message: "Unauthorised"});
     }
 }

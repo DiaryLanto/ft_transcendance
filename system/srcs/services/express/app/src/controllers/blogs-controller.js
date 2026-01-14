@@ -7,7 +7,7 @@ const createBlog = async (req, res, next) => {
         res.status(200).json({message: "Blog created successfully"});
     } catch (error) {
         console.log(error);
-        res.status(401).json({error: "Cannot create blog"});
+        next(error);
     }
 }
 
@@ -16,8 +16,7 @@ const getAllBlog = async (req, res, next) => {
         const blogs = await getAllBlogFromDB(req);
         res.status(200).json({data: blogs});
     } catch (error) {
-        console.log(error);
-        res.status(400).json({error : "Failed to fetch all the blogs"});
+        next(error);
     }
 }
 

@@ -4,10 +4,7 @@ const {signup, login} = require('../controllers/users-controller');
 const error_checker = require('../middlewares/error-checking-validator');
 //Create
 user_router.post("/signup", user_validator, error_checker, signup);
-
-
 //Read
-
 user_router.post("/login", login);
 
 user_router.get('/', (req, res) => {

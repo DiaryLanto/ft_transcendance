@@ -1,22 +1,21 @@
 const {newPost, getPostComments} = require('../services/comment-services');
 
-const createPost = async (req, res) => {
+const createPost = async (req, res, next) => {
     try {
         await newPost(req);
         res.status(200).json({message: "comment posted"});
     } catch (error) {
-        res.status(400).json({error: "Error while posting"});
+        next(error);
     }
 
 }
 
-const getCommentOfPost = async (req, res) => {
+const getCommentOfPost = async (req, res, next) => {
     try {
         const comments = await getPostComments(req);
         res.status(200).json({data: (comments.length === 0 ? "no comment" : comments)});
     } catch (error) {
-        console.log(error);
-        res.status(400).json({error: "Error fetching"});
+        next(error);
     }
 }
 

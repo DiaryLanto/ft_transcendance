@@ -2,13 +2,12 @@ const { post } = require("../routes/post-routes");
 const {newPost, getBlogPosts, getPost, deletePostService} = require("../services/post-services")
 const AppError = require('../errors/appError');
 
-const createPost = async (req, res) => {
+const createPost = async (req, res, next) => {
     try {
         await newPost(req);
         res.status(200).json({message: "post created successfully"});
     } catch (error) {
-        console.log(error);
-        res.status(401).json({error: "Error when creating post"});
+        next(error);
     }
 }
 
@@ -20,8 +19,7 @@ const fetchBlogPosts = async (req, res, next) => {
         const status = posts.length === 0 ? 404 : 200;
         res.status(status).json({data: posts.length === 0 ? "no post" : posts});
     } catch (error) {
-        console.log(error);
-        res.status(400).json({error: "Error fetching blog"});
+        next(error);
     }
 }
 
@@ -36,7 +34,7 @@ const getSpecificPost = async (req, res, next) => {
         else
             res.status(200).json({error: post});
     } catch (error) {
-        res.status(501).json({error: "Internal server error"});
+        next(error);
     }
 }
 
@@ -47,9 +45,7 @@ const deletePost = async (req, res, next) =>{
         await deletePostService(req.params.post_id, req.user.sub);
         res.status(200).json({message: "deleted"});
     } catch (error) {
-        console.log(error);
         next(error);
-        // res.status(501).json({error: "Internal server error"});
     }
 }
 

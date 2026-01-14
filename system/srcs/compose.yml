@@ -43,6 +43,7 @@ services:
       context: services/nginx/
       dockerfile: Dockerfile
       args:
+        NGINX_VERSION: '${NGINX_VERSION}'
         NODE_VERSION: '${NODE_VERSION}'
         NGINX_PORT: '${NGINX_PORT}'
     image: '${NGINX_NAME}'

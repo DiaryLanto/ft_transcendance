@@ -1,13 +1,12 @@
 const {Blog} = require ("../models");
+const AppError = require("../errors/appError");
 
 const newBlog = async ({name}, {sub}) => {
-    const blogError = new Error ("Invalid blog name");
-    blogError.status = 401;
     const blog = await Blog.findOne({
         where: {name: name}
     })
     if (blog)
-        throw blogError;
+        throw (new AppError(401, "Invalid blog name"));
     await Blog.create({
         name: name,
         UserId: sub

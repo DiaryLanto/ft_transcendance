@@ -2,15 +2,12 @@ const user = require('../models/users');
 const {signupUser, loginUser} = require('../services/user-services');
 
 const signup = async (req, res) => {
-    try
-    {
+    try{
         await signupUser(req.body);
-        res.status(201).json({info: 'User signed up successfully'});
+        res.status(200).json({info: 'User signed up successfully'});
     }
-    catch (error)
-    {
-        console.log(error);
-        res.status(error.status).json({errors: error.message});
+    catch (error){
+        next(error);
     }
 }
 
@@ -22,8 +19,7 @@ const login = async (req, res) => {
             access_token: token 
         });
     } catch (error) {
-        console.log (error);
-        res.status(error.status).json({errors: error.message});
+        next(error);
     }
 }
 
