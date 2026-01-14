@@ -31,12 +31,20 @@ const getBlogPosts = async (req) => {
         where: {
             BlogId : req.params.blog_id
         },
-        attributes: ["id", "title", "content", "createdAt", "BlogId"]
+        attributes: ["id", "title", "createdAt", "BlogId"] // content
     });
     return (posts);
 }
 
+const getPost = async (postId) => {
+    const post = await Post.findByPk(postId, {
+        attributes: ["title", "content", "createdAt", "BlogId"]
+    });
+    return (post);
+}
+
 module.exports = {
     newPost,
-    getBlogPosts
+    getBlogPosts,
+    getPost
 };
