@@ -26,4 +26,17 @@ const newPost = async (req) => {
     );
 }
 
-module.exports = newPost;
+const getBlogPosts = async (req) => {
+    const posts = await Post.findAll({
+        where: {
+            BlogId : req.params.blog_id
+        },
+        attributes: ["id", "title", "content", "createdAt", "BlogId"]
+    });
+    return (posts);
+}
+
+module.exports = {
+    newPost,
+    getBlogPosts
+};
