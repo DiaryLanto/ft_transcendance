@@ -43,8 +43,32 @@ const getPost = async (postId) => {
     return (post);
 }
 
+const deletePostService = async (post_id, user_id) => {
+    const post = await Post.findByPk(post_id, {
+        include: {
+            model: Blog,
+            attributes: ["UserId"]
+        }
+    });
+
+    if (!post)
+    {
+        const error = new Error ("Post not found");
+        error.status = 404;
+        throw (error);
+    }
+    if (post.Blog.UserId !== user_id)
+    {
+        const error = new Error ("Forbidden");
+        error.status = 403;
+        throw (error);
+    }
+    await post.destroy();
+}
+
 module.exports = {
     newPost,
     getBlogPosts,
-    getPost
+    getPost,
+    deletePostService
 };

@@ -1,5 +1,5 @@
 const { post } = require("../routes/post-routes");
-const {newPost, getBlogPosts, getPost} = require("../services/post-services")
+const {newPost, getBlogPosts, getPost, deletePostService} = require("../services/post-services")
 
 const createPost = async (req, res) => {
     try {
@@ -28,7 +28,7 @@ const getSpecificPost = async (req, res, next) => {
     try {
         const postId = req.params.post_id;
         if (!postId)
-            res.status(404).json({error: "forbidden"});
+            return res.status(404).json({error: "forbidden"});
         const post = await getPost(postId);
         if (!post)
             res.status(404).json({error: "post no found"});
@@ -39,8 +39,21 @@ const getSpecificPost = async (req, res, next) => {
     }
 }
 
+const deletePost = async (req, res, next) =>{
+    if (!req.params.post_id)
+        return res.status(404).json({error: "forbidden"});
+    try {
+        await deletePostService(req.params.post_id, req.user.sub);
+        res.status(200).json({message: "deleted"});
+    } catch (error) {
+        console.log(error);
+        res.status(501).json({error: "Internal server error"});
+    }
+}
+
 module.exports = {
     createPost,
     fetchBlogPosts,
-    getSpecificPost
+    getSpecificPost,
+    deletePost
 };
