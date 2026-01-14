@@ -1,4 +1,4 @@
-const {body} = require("express-validator");
+const {body, param} = require("express-validator");
 
 const commentValidator = [
     body("post")
@@ -11,4 +11,12 @@ const commentValidator = [
     .withMessage("Should contain message")
 ];
 
-module.exports = commentValidator;
+const commentParamValidator = [
+    param('post_id')
+    .notEmpty()
+    .withMessage("Unknown post")
+]
+module.exports = {
+    commentValidator,
+    commentParamValidator
+};

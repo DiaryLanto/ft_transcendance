@@ -21,4 +21,17 @@ const newPost = async (req) => {
     });
 }
 
-module.exports = newPost;
+const getPostComments = async (req) => {
+    const comments = await Comment.findAll({
+        where: {
+            PostId : req.params.post_id
+        }
+    })
+
+    return (comments);
+}
+
+module.exports = {
+    newPost,
+    getPostComments
+};

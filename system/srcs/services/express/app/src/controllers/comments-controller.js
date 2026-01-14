@@ -1,4 +1,4 @@
-const newPost = require('../services/comment-services');
+const {newPost, getPostComments} = require('../services/comment-services');
 
 const createPost = async (req, res) => {
     try {
@@ -10,4 +10,17 @@ const createPost = async (req, res) => {
 
 }
 
-module.exports = createPost;
+const getCommentOfPost = async (req, res) => {
+    try {
+        const comments = await getPostComments(req);
+        res.status(200).json({data: (comments.length === 0 ? "no comment" : comments)});
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({error: "Error fetching"});
+    }
+}
+
+module.exports = {
+    createPost,
+    getCommentOfPost
+};
