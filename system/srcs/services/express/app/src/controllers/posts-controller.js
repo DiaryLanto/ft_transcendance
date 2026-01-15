@@ -1,5 +1,5 @@
 const { post } = require("../routes/post-routes");
-const {newPost, getBlogPosts, getPost, deletePostService} = require("../services/post-services")
+const {newPost, getBlogPosts, getPost, deletePostService, savePostUpdate} = require("../services/post-services")
 const AppError = require('../errors/appError');
 
 const createPost = async (req, res, next) => {
@@ -49,9 +49,23 @@ const deletePost = async (req, res, next) =>{
     }
 }
 
+const handlePostUpdate = async(req, res, next) => {
+    try {
+        const post_id = req.params.post_id;
+        const updatedData = req.body;
+        if (!post_id)
+            throw (new AppError(401, "Bad request"));
+        await savePostUpdate(updatedData, req.user.sub ,post_id);
+        res.status(200).json({message: "Update saved"});
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     createPost,
     fetchBlogPosts,
     getSpecificPost,
-    deletePost
+    deletePost,
+    handlePostUpdate
 };

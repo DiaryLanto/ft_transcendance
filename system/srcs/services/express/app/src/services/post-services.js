@@ -35,30 +35,37 @@ const getPost = async (postId) => {
     return (post);
 }
 
-const deletePostService = async (post_id, user_id) => {
+const postBelongsToUser = async (post_id, user_id) => {
     const post = await Post.findByPk(post_id, {
         include: {
             model: Blog,
             attributes: ["UserId"]
         }
     });
-
     if (!post)
-    {
-        const error = new AppError (404, "Post not found");
-        throw (error);
-    }
+        throw (new AppError (404, "Post not found"));
     if (post.Blog.UserId !== user_id)
-    {
-        const error = new AppError (403, "Forbidden");
-        throw (error);
-    }
+        throw (new AppError (403, "Forbidden"));
+    return (post);
+}
+
+const deletePostService = async (post_id, user_id) => {
+    const post = await postBelongsToUser(post_id, user_id);
     await post.destroy();
+}
+
+const savePostUpdate = async ({title, content}, user_id, post_id) => {
+    const post = await postBelongsToUser(post_id, user_id);
+    post.title = title;
+    post.content = content;
+    await post.save();
+    console.log("Save update");
 }
 
 module.exports = {
     newPost,
     getBlogPosts,
     getPost,
-    deletePostService
+    deletePostService,
+    savePostUpdate
 };
