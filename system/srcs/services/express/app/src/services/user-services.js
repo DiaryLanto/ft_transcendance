@@ -51,7 +51,19 @@ const loginUser = async ({login, passwd}) => {
     };
 }
 
+const fetchUserFromDB = async (userId) => {
+    const user = User.findByPk(userId, {
+        attributes: {
+            exclude : ["password"]
+        }
+    });
+    if (!user)
+        throw (new AppError(404, "User not found"));
+    return user;
+}
+
 module.exports = { 
     signupUser,
-    loginUser
+    loginUser,
+    fetchUserFromDB
 };

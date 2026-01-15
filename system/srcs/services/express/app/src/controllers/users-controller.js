@@ -1,5 +1,5 @@
 const user = require('../models/users');
-const {signupUser, loginUser} = require('../services/user-services');
+const {signupUser, loginUser, fetchUserFromDB} = require('../services/user-services');
 const AppError = require("../errors/appError");
 
 const signup = async (req, res, next) => {
@@ -29,7 +29,17 @@ const login = async (req, res, next) => {
     }
 }
 
+const handleGetUser = async (req, res, next) => {
+    try {
+        const user = await fetchUserFromDB(req.params.userId);
+        res.status(200).json({data : user});
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     signup,
-    login
+    login,
+    handleGetUser
 };
