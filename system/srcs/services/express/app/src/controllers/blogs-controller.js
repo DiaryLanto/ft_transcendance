@@ -1,5 +1,6 @@
+const AppError = require("../errors/appError");
 const {User} =require ("../models");
-const {newBlog, getAllBlogFromDB} = require("../services/blog-services");
+const {newBlog, getAllBlogFromDB, fetchBlogFromDB} = require("../services/blog-services");
 
 const createBlog = async (req, res, next) => {
     try {
@@ -13,8 +14,19 @@ const createBlog = async (req, res, next) => {
 
 const getAllBlog = async (req, res, next) => {
     try {
-        const blogs = await getAllBlogFromDB(req);
+        const blogs = await getAllBlogFromDB(req.params.blogId);
         res.status(200).json({data: blogs});
+    } catch (error) {
+        next(error);
+    }
+}
+
+const handleGetOneBlog = async (req, res, next) => {
+    if (!req.params.blogId)
+        next(new AppError(403, "Bad request"));
+    try {
+        const blog = await fetchBlogFromDB(req.params.blogId);
+        res.status(200).json({data : blog});
     } catch (error) {
         next(error);
     }
@@ -22,5 +34,6 @@ const getAllBlog = async (req, res, next) => {
 
 module.exports = {
     createBlog,
-    getAllBlog
+    getAllBlog,
+    handleGetOneBlog
 };
