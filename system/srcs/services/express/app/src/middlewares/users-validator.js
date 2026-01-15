@@ -1,6 +1,6 @@
 const {body} = require('express-validator')
 
-const user_validator = [
+const validateNewUser = [
     body('login')
         .trim()
         .isLength({min:3, max:10})
@@ -19,4 +19,18 @@ const user_validator = [
         .normalizeEmail()
 ];
 
-module.exports = user_validator;
+//what could we update
+const validateUserUpdate = [
+    body("date_of_birth")
+        .optional({values: 'falsy'}),
+    body("bio")
+        .optional({values: 'falsy'}),
+    body("phone")
+        .optional({values: 'falsy'}),
+    body("address")
+        .optional({values: 'falsy'})
+];
+module.exports = {
+    validateNewUser,
+    validateUserUpdate
+};

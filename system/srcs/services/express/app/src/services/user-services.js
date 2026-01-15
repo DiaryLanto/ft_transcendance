@@ -62,8 +62,24 @@ const fetchUserFromDB = async (userId) => {
     return user;
 }
 
+const updateProfile = async (userId, data) => {
+    const user = await User.findByPk(userId);
+    if (!user)
+        throw (new AppError(404, "User not found"));
+    if (data.date_of_birth !== undefined)
+        user.date_of_birth = data.date_of_birth;
+    if (data.bio !== undefined)
+        user.bio = data.bio;
+    if (data.phone !== undefined)
+        user.phone = data.phone;
+    if (data.address !== undefined)
+        user.address = data.address;
+    await user.save();
+}
+
 module.exports = { 
     signupUser,
     loginUser,
-    fetchUserFromDB
+    fetchUserFromDB,
+    updateProfile
 };
