@@ -100,3 +100,31 @@ How the page will look like?
 }
 
 NB : Recherche post (filtre)
+
+
+## API Definition
+### /users/signup [For account creation]
+1. Method : POST
+2. Field required : 'login', 'passwd', 'confirm', 'email'
+
+3. On success :
+    {
+        message: 'User signed up successfully'
+    }
+4. On Failure :
+    {
+        error : "--error_message--"
+    }
+
+### /users/login [For login]
+1. Method : POST
+2. Field required: 'login', 'password'
+3. On Succes : 
+    {
+        message: "Login successful",
+        access_token: "---token---"
+    }
+4. On Failure : 
+    {
+        error: "--error_message--"
+    }
