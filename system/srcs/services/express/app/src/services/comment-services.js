@@ -33,7 +33,10 @@ const saveCommentUpdate = async (commentId, userId, content) => {
     const comment = await Comment.findByPk(commentId);
     if (!comment)
         throw (new AppError(404, "Comment not found"));
+    if (comment.UserId !== userId)
+        throw (new AppError(403, "Forbidden"));
     comment.content = content;
+    await comment.save();
 }
 module.exports = {
     newPost,
