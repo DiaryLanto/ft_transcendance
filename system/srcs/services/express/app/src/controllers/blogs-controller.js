@@ -23,7 +23,7 @@ const getAllBlog = async (req, res, next) => {
 
 const handleGetOneBlog = async (req, res, next) => {
     if (!req.params.blogId)
-        next(new AppError(403, "Bad request"));
+        return next(new AppError(403, "Bad request"));
     try {
         const blog = await fetchBlogFromDB(req.params.blogId);
         res.status(200).json({data : blog});
