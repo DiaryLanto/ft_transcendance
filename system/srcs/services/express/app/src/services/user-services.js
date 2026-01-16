@@ -77,9 +77,20 @@ const updateProfile = async (userId, data) => {
     await user.save();
 }
 
+const deleteUserFromDB = async (userId, password) => {
+    const user = await User.findByPk(userId);
+    if (!user)
+        throw (new AppError(404, "User not found"));
+    const matched = await bcrypt.compare(password, user.password);
+    if (!matched)
+        throw (new AppError(403, "Forbidden")); 
+    await user.destroy();
+}
+
 module.exports = { 
     signupUser,
     loginUser,
     fetchUserFromDB,
-    updateProfile
+    updateProfile,
+    deleteUserFromDB
 };

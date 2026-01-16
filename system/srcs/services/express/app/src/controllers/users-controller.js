@@ -1,6 +1,7 @@
 const user = require('../models/users');
-const {signupUser, loginUser, fetchUserFromDB, updateProfile} = require('../services/user-services');
+const {signupUser, loginUser, fetchUserFromDB, updateProfile, deleteUserFromDB} = require('../services/user-services');
 const AppError = require("../errors/appError");
+const { User } = require('../models');
 
 const signup = async (req, res, next) => {
     try{
@@ -47,9 +48,21 @@ const handleProfilUpdate = async (req, res, next) => {
     }
 }
 
+const handleSelfDelete = async (req, res, next) => {
+    if (!req.body.password)
+        return next(new AppError(400, "Bad request"));
+    try {
+        await deleteUserFromDB(req.user.sub, req.body.password);
+        res.status(200).json({message : "User deleted"});
+    } catch (error) {
+        next (error);
+    }
+}
+
 module.exports = {
     signup,
     login,
     handleGetUser,
-    handleProfilUpdate
+    handleProfilUpdate,
+    handleSelfDelete
 };
