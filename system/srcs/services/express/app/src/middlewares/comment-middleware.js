@@ -16,7 +16,15 @@ const commentParamValidator = [
     .notEmpty()
     .withMessage("Unknown post")
 ]
+
+const validateCommentUpdate = [
+    body("content")
+    .trim()
+    .notEmpty()
+    .withMessage("content should not be empty")
+];
 module.exports = {
     commentValidator,
-    commentParamValidator
+    commentParamValidator,
+    validateCommentUpdate
 };

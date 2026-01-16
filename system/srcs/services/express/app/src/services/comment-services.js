@@ -29,7 +29,14 @@ const getPostComments = async (req) => {
     return (comments);
 }
 
+const saveCommentUpdate = async (commentId, userId, content) => {
+    const comment = await Comment.findByPk(commentId);
+    if (!comment)
+        throw (new AppError(404, "Comment not found"));
+    comment.content = content;
+}
 module.exports = {
     newPost,
-    getPostComments
+    getPostComments,
+    saveCommentUpdate
 };
