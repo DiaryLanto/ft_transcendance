@@ -29,17 +29,30 @@ const getPostComments = async (req) => {
     return (comments);
 }
 
-const saveCommentUpdate = async (commentId, userId, content) => {
+const verifyCommentOwnership = async (commentId, userId) =>
+{
     const comment = await Comment.findByPk(commentId);
     if (!comment)
         throw (new AppError(404, "Comment not found"));
     if (comment.UserId !== userId)
         throw (new AppError(403, "Forbidden"));
+    return (comment);
+}
+
+const saveCommentUpdate = async (commentId, userId, content) => {
+    const comment = await verifyCommentOwnership(commentId, userId);
     comment.content = content;
     await comment.save();
 }
+
+const deleteCommentFromDB = async (commentId, userId) => {
+    const comment = await verifyCommentOwnership(commentId, userId);
+    comment.destroy();
+}
+
 module.exports = {
     newPost,
     getPostComments,
-    saveCommentUpdate
+    saveCommentUpdate,
+    deleteCommentFromDB
 };

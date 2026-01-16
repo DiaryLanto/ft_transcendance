@@ -1,4 +1,4 @@
-const {newPost, getPostComments, saveCommentUpdate} = require('../services/comment-services');
+const {newPost, getPostComments, saveCommentUpdate, deleteCommentFromDB} = require('../services/comment-services');
 
 const createPost = async (req, res, next) => {
     try {
@@ -31,8 +31,18 @@ const handleCommentUpdate = async(req, res, next) => {
     }
 }
 
+const handleCommentDeletion = async (req, res, next) => {
+    try {
+        await deleteCommentFromDB(req.params.commentId, req.user.sub)
+        res.status(200).json({message: "Comment deleted"});
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     createPost,
     getCommentOfPost,
-    handleCommentUpdate
+    handleCommentUpdate,
+    handleCommentDeletion
 };
