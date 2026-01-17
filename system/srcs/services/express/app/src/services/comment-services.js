@@ -50,9 +50,22 @@ const deleteCommentFromDB = async (commentId, userId) => {
     comment.destroy();
 }
 
+const getCommentByUser = async (userId) => {
+    const comments = await Comment.findAll({
+        where: {
+            UserId: userId
+        },
+        attributes: {
+            exclude: ["publication_date", "UserId"]
+        }
+    });
+    return comments;
+}
+
 module.exports = {
     newPost,
     getPostComments,
     saveCommentUpdate,
-    deleteCommentFromDB
+    deleteCommentFromDB,
+    getCommentByUser
 };
