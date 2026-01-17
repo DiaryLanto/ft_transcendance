@@ -1,6 +1,6 @@
 const AppError = require("../errors/appError");
 const {User} =require ("../models");
-const {newBlog, getAllBlogFromDB, fetchBlogFromDB, saveBlogUpdate} = require("../services/blog-services");
+const {newBlog, getAllBlogFromDB, fetchBlogFromDB, saveBlogUpdate, deleteBlog} = require("../services/blog-services");
 
 const createBlog = async (req, res, next) => {
     try {
@@ -35,9 +35,20 @@ const handleGetOneBlog = async (req, res, next) => {
 const handleBlogUpate = async (req, res, next) => {
     try {
         const blogId = req.params.blogId;
-        const userId = req.user.sub
+        const userId = req.user.sub;
         await saveBlogUpdate(blogId, userId, req.body);
         res.status(200).json({message: "Blog updated"});
+    } catch (error) {
+        next(error);
+    }
+}
+
+const handleBlogDelete = async (req, res, next) => {
+    try {
+        const blogId = req.params.blogId;
+        const userId = req.user.sub;
+        await deleteBlog(blogId, userId);
+        res.status(200).json({message: "Blog deleted"});
     } catch (error) {
         next(error);
     }
@@ -47,5 +58,6 @@ module.exports = {
     createBlog,
     getAllBlog,
     handleGetOneBlog,
-    handleBlogUpate
+    handleBlogUpate,
+    handleBlogDelete
 };

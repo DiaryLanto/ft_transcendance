@@ -41,7 +41,7 @@ const fetchBlogFromDB = async (blogId) => {
 const checkBlogOwnerShip = async (blogId, userId) => {
     const blog = await Blog.findByPk(blogId);
     if (!blog)
-        throw (new AppError(404, "Comment not found"));
+        throw (new AppError(404, "Blog not found"));
     if (blog.UserId !== userId)
         throw (new AppError(403, "Forbidden"));
     return (blog);
@@ -56,9 +56,15 @@ const saveBlogUpdate = async (blogId, userId, data) => {
     await blog.save();
 }
 
+const deleteBlog = async (blogId, userId) => {
+    const blog = await checkBlogOwnerShip(blogId, userId);
+    blog.destroy();
+}
+
 module.exports = {
     newBlog,
     getAllBlogFromDB,
     fetchBlogFromDB,
-    saveBlogUpdate
+    saveBlogUpdate,
+    deleteBlog
 };
