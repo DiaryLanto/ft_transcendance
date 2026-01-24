@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: false
         },
+        approved: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
         publication_date: {
             type: DataTypes.DATE,
             allowNull: false,

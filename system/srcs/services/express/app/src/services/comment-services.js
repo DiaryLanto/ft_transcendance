@@ -1,4 +1,4 @@
-const {Post, Comment} = require ('../models');
+const {Blog, Post, Comment} = require ('../models');
 const AppError = require("../errors/appError");
 
 const newPost = async (req) => {
@@ -62,10 +62,30 @@ const getCommentByUser = async (userId) => {
     return comments;
 }
 
+const approveComment = async (userId, commentId) => {
+    const comment = Comment.findByPk(commentId, {
+        include: {
+            model: Post,
+            include: {
+                model: Blog,
+                attributes: ["UserId"]
+            }
+        }
+    });
+
+    if (!comment)
+        throw (new AppError(404, "Comment not found"));
+    if (userId !== comment.Post.Blog.UserId)
+        throw (new AppError(403, "Forbidden"));
+    comment.approved = true;
+    await comment.save();
+}
+
 module.exports = {
     newPost,
     getPostComments,
     saveCommentUpdate,
     deleteCommentFromDB,
-    getCommentByUser
+    getCommentByUser,
+    approveComment
 };

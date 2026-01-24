@@ -1,4 +1,4 @@
-const {newPost, getPostComments, saveCommentUpdate, deleteCommentFromDB, getCommentByUser} = require('../services/comment-services');
+const {newPost, getPostComments, saveCommentUpdate, deleteCommentFromDB, getCommentByUser, approveComment} = require('../services/comment-services');
 
 const createPost = async (req, res, next) => {
     try {
@@ -49,10 +49,20 @@ const handleGetCommentByUser = async (req, res, next) => {
     }
 }
 
+const handleApproveComment = async (req, res, next) => {
+    try {
+        await approveComment(req.user.sub, req.params.commentId);
+        res.status(200).json({message : "Comment approved"});
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     createPost,
     getCommentOfPost,
     handleCommentUpdate,
     handleCommentDeletion,
-    handleGetCommentByUser
+    handleGetCommentByUser,
+    handleApproveComment
 };
