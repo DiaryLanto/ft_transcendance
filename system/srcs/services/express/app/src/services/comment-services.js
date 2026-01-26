@@ -31,10 +31,18 @@ const getPostComments = async (req) => {
 
 const verifyCommentOwnership = async (commentId, userId) =>
 {
-    const comment = await Comment.findByPk(commentId);
+    const comment = await Comment.findByPk(commentId, {
+        include: {
+            model: Post,
+            include: {
+                model: Blog,
+                attributes: ["UserId"]
+            }
+        }
+    });
     if (!comment)
         throw (new AppError(404, "Comment not found"));
-    if (comment.UserId !== userId)
+    if (comment.UserId !== userId && comment.Post.Blog.UserId !== userId)
         throw (new AppError(403, "Forbidden"));
     return (comment);
 }
