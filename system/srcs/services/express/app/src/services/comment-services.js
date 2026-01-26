@@ -63,7 +63,7 @@ const getCommentByUser = async (userId) => {
 }
 
 const approveComment = async (userId, commentId) => {
-    const comment = Comment.findByPk(commentId, {
+    const comment = await Comment.findByPk(commentId, {
         include: {
             model: Post,
             include: {
@@ -75,8 +75,10 @@ const approveComment = async (userId, commentId) => {
 
     if (!comment)
         throw (new AppError(404, "Comment not found"));
+    console.log(comment.Post.Blog.UserId);
     if (userId !== comment.Post.Blog.UserId)
         throw (new AppError(403, "Forbidden"));
+    
     comment.approved = true;
     await comment.save();
 }
