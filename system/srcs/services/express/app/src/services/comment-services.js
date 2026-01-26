@@ -6,7 +6,7 @@ const newPost = async (req) => {
     const postContent = req.body.content;
     const postId = req.body.post;
 
-    const post = Post.findByPk(postId, {
+    const post = await Post.findByPk(postId, {
         attributes: ["id"]
     });
     console.log (post);
