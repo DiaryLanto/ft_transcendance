@@ -1,4 +1,4 @@
-const {User} = require("../models");
+const {User, Post} = require("../models");
 const bcrypt = require("bcrypt");
 const {Op} = require('sequelize');
 const {SignJWT} = require('jose');
@@ -87,10 +87,23 @@ const deleteUserFromDB = async (userId, password) => {
     await user.destroy();
 }
 
+const savePost = async (postId, userId) => {
+    const post = await Post.findByPk(postId);
+
+    if (!post)
+        throw (new AppError(404, "post not found"));
+    const IsSavedPost = await post.hasSavingUser(userId);
+    if (!IsSavedPost)
+        await post.addSavingUser(userId);
+    else
+        console.log("post already saved");
+}
+
 module.exports = { 
     signupUser,
     loginUser,
     fetchUserFromDB,
     updateProfile,
-    deleteUserFromDB
+    deleteUserFromDB,
+    savePost
 };

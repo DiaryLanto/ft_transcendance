@@ -1,5 +1,5 @@
 const user = require('../models/users');
-const {signupUser, loginUser, fetchUserFromDB, updateProfile, deleteUserFromDB} = require('../services/user-services');
+const {signupUser, loginUser, fetchUserFromDB, updateProfile, deleteUserFromDB, savePost} = require('../services/user-services');
 const AppError = require("../errors/appError");
 const { User } = require('../models');
 
@@ -59,10 +59,22 @@ const handleSelfDelete = async (req, res, next) => {
     }
 }
 
+const handleSaveToLibrary = async (req, res, next) => {
+    try {
+        const postId = req.params.postId;
+        const userId = req.user.sub;
+        await savePost(postId, userId);
+        res.status(200).json({message: "post saved"});
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     signup,
     login,
     handleGetUser,
     handleProfilUpdate,
-    handleSelfDelete
+    handleSelfDelete,
+    handleSaveToLibrary
 };
