@@ -1,4 +1,4 @@
-const {Post, Blog} = require("../models");
+const {Post, Blog, User} = require("../models");
 const AppError = require('../errors/appError');
 
 const newPost = async (req) => {
@@ -62,10 +62,24 @@ const savePostUpdate = async ({title, content}, user_id, post_id) => {
     console.log("Save update");
 }
 
+const saveClapping = async (postId, UserId) => {
+    const post = await Post.findByPk(postId);
+    if (!post)
+        throw (new AppError(404, "Post not found"));
+    const clapped = await post.hasUser(UserId);
+    if (!clapped)
+    {
+        await post.addUser(UserId);
+        post.clap_count += 1;
+        await post.save();
+    }
+}
+
 module.exports = {
     newPost,
     getBlogPosts,
     getPost,
     deletePostService,
-    savePostUpdate
+    savePostUpdate,
+    saveClapping
 };

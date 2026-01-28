@@ -1,5 +1,5 @@
 const { post } = require("../routes/post-routes");
-const {newPost, getBlogPosts, getPost, deletePostService, savePostUpdate} = require("../services/post-services")
+const {newPost, getBlogPosts, getPost, deletePostService, savePostUpdate, saveClapping} = require("../services/post-services")
 const AppError = require('../errors/appError');
 
 const createPost = async (req, res, next) => {
@@ -62,10 +62,22 @@ const handlePostUpdate = async(req, res, next) => {
     }
 }
 
+const handleClapping = async (req, res, next) => {
+    try {
+        const postId = req.params.postId;
+        const userId = req.user.sub;
+        await saveClapping(postId, userId);
+        res.status(200).json({message: "clapp saved"});
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     createPost,
     fetchBlogPosts,
     getSpecificPost,
     deletePost,
-    handlePostUpdate
+    handlePostUpdate,
+    handleClapping
 };

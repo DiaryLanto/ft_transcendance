@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: false
         },
+        clap_count: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
         publication_date: {
             type: DataTypes.DATE,
             allowNull: false,
