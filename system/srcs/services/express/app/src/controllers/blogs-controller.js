@@ -14,7 +14,7 @@ const createBlog = async (req, res, next) => {
 
 const getAllBlog = async (req, res, next) => {
     try {
-        const blogs = await getAllBlogFromDB(req.params.blogId);
+        const blogs = await getAllBlogFromDB(req.user.sub);
         res.status(200).json({data: blogs});
     } catch (error) {
         next(error);
