@@ -99,11 +99,23 @@ const savePost = async (postId, userId) => {
         console.log("post already saved");
 }
 
+const deletePostFromLibrary = async (postId, userId) => {
+    const post = await Post.findByPk(postId);
+
+    if (!post)
+        throw (new AppError(404, "post not found"));
+    const isPostSave = await post.hasSavingUser(userId);
+    if (!isPostSave)
+        throw (new AppError(403, "forbidden"));
+    post.removeSavingUser(userId);
+}
+
 module.exports = { 
     signupUser,
     loginUser,
     fetchUserFromDB,
     updateProfile,
     deleteUserFromDB,
-    savePost
+    savePost,
+    deletePostFromLibrary
 };

@@ -1,5 +1,5 @@
 const user = require('../models/users');
-const {signupUser, loginUser, fetchUserFromDB, updateProfile, deleteUserFromDB, savePost} = require('../services/user-services');
+const {signupUser, loginUser, fetchUserFromDB, updateProfile, deleteUserFromDB, savePost, deletePostFromLibrary} = require('../services/user-services');
 const AppError = require("../errors/appError");
 const { User } = require('../models');
 
@@ -70,11 +70,24 @@ const handleSaveToLibrary = async (req, res, next) => {
     }
 }
 
+const handleDeleteSavedPost = async (req, res, next) => {
+    try {
+        const postId = req.params.postId;
+        const userId = req.user.sub;
+
+        await deletePostFromLibrary(postId, userId);
+        res.status(200).json({message: "post deleted from library"});
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     signup,
     login,
     handleGetUser,
     handleProfilUpdate,
     handleSelfDelete,
-    handleSaveToLibrary
+    handleSaveToLibrary,
+    handleDeleteSavedPost
 };
