@@ -7,6 +7,6 @@ const error_checker = require('../middlewares/error-checking-validator');
 user_router.post("/signup", validateNewUser, error_checker, signup);
 user_router.post("/login", login);
 user_router.get('/:userId', handleGetUser);
-user_router.post("/update", auth_validator , handleProfilUpdate);
-user_router.delete("/delete", auth_validator, handleSelfDelete);
+user_router.patch("/", auth_validator , handleProfilUpdate);
+user_router.delete("/", auth_validator, handleSelfDelete);
 module.exports = user_router ;

@@ -4,9 +4,9 @@ const {createPost, fetchBlogPosts, getSpecificPost, deletePost, handlePostUpdate
 const {validateNewPost, validatePostUpdate} = require("../middlewares/post-middleware");
 const error_checker = require("../middlewares/error-checking-validator");
 
-post_router.post("/new", auth_validator, validateNewPost, error_checker, createPost);
+post_router.post("/", auth_validator, validateNewPost, error_checker, createPost);
 post_router.get('/of/:blog_id', fetchBlogPosts);
 post_router.get('/:post_id', getSpecificPost);
-post_router.delete("/delete/:post_id", auth_validator, deletePost);
-post_router.post("/update/:post_id", auth_validator, validatePostUpdate, error_checker, handlePostUpdate);
+post_router.delete("/:post_id", auth_validator, deletePost);
+post_router.patch("/:post_id", auth_validator, validatePostUpdate, error_checker, handlePostUpdate);
 module.exports = post_router ;

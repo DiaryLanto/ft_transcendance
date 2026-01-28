@@ -6,8 +6,8 @@ const {createPost, getCommentOfPost, handleCommentUpdate, handleCommentDeletion,
 
 comment_router.get("/of/:post_id", commentParamValidator, error_checker, getCommentOfPost);
 comment_router.get("/by/:userId", auth_validation, handleGetCommentByUser);
-comment_router.post("/new", auth_validation, commentValidator, error_checker, createPost);
-comment_router.post("/approve/:commentId", auth_validation, handleApproveComment);
-comment_router.post("/update/:commentId", auth_validation, validateCommentUpdate, error_checker, handleCommentUpdate);
-comment_router.delete("/delete/:commentId", auth_validation, handleCommentDeletion);
+comment_router.post("/", auth_validation, commentValidator, error_checker, createPost);
+comment_router.patch("/:commentId/approve", auth_validation, handleApproveComment);
+comment_router.patch("/:commentId", auth_validation, validateCommentUpdate, error_checker, handleCommentUpdate);
+comment_router.delete("/:commentId", auth_validation, handleCommentDeletion);
 module.exports = comment_router;
