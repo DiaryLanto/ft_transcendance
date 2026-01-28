@@ -56,6 +56,13 @@ How the page will look like?
  * ***COMMENTS*** belongs to one and one ***POSTS***
  * ***COMMENTS*** belongs to one and one ***USERS***
 
+ **Posts-Users**
+ * ***POSTS*** can be clapped by many ***USERS***
+ * ***USERS*** can clap many ***POSTS***
+
+ * ***USERS*** can save multiple ***POST*** in library
+ * ***POST*** can be saved by many ***USERS***
+
  **Themes**  
 
 ## Logical Design

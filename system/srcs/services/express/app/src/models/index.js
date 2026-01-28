@@ -29,6 +29,8 @@ Comment.belongsTo(User);
 User.belongsToMany(Post, {through: 'Clapping'});
 Post.belongsToMany(User, {through: 'Clapping'});
 
+User.belongsToMany(Post, {through: 'Library'});
+Post.belongsToMany(User, {through: 'Library'});
 /** COMMENT and POST relation **/
 Comment.belongsTo(Post);
 Post.hasMany(Comment);
