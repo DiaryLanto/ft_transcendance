@@ -49,7 +49,7 @@
     }
 ```
 
-#### 3. ` POST /{postId}/library`
+#### 3. ` POST /users/{postId}/library`
 * *Desc* : save a post to the library
 * *Authenticated* : ***MUST***
 * *body* :  None
@@ -67,7 +67,7 @@
     }
 ```
 
-#### 4. ` DELETE /{postId}/library`
+#### 4. ` DELETE /users/{postId}/library`
 * *Desc* : delete a saved post
 * *Authenticated* : ***MUST***
 * *body* :  None
@@ -85,7 +85,7 @@
     }
 ```
 
-#### 5. ` GET /{userId}`
+#### 5. ` GET /users/{userId}`
 * *Desc* : get info about a user
 * *Authenticated* : ***MUST NOT***
 * *body* :  None
@@ -111,7 +111,7 @@
         error: 'error message'
     }
 ```
-#### 6. ` PATCH /`
+#### 6. ` PATCH /users/`
 * *Desc* : update user profile
 * *Authenticated* : ***MUST***
 * *body* :  
@@ -139,7 +139,7 @@
     }
 ```
 
-#### 7. ` DELETE /`
+#### 7. ` DELETE /users/`
 * *Desc* : update user profile
 * *Authenticated* : ***MUST***
 * *body* :  
@@ -167,8 +167,8 @@
     }
 ```
 
-## B. USERS related endpoints
-#### 1. ` POST /`
+## B. BLOGS related endpoints
+#### 1. ` POST /blogs`
 * *Desc* : create new blog
 * *Authenticated* : ***MUST***
 * *body* :  
@@ -192,7 +192,7 @@
     }
 ```
 
-#### 2. ` GET /`
+#### 2. ` GET /blogs`
 * *Desc* : list all blog
 * *Authenticated* : ***MUST***
 * *body* :  None
@@ -220,7 +220,7 @@
     }
 ```
 
-#### 3. ` GET /{blogId}`
+#### 3. ` GET /blogs/{blogId}`
 * *Desc* : get one blog details
 * *Authenticated* : ***MUST NOT***
 * *body* :  None
@@ -245,7 +245,7 @@
     }
 ```
 
-#### 4. ` PATCH /{blogId}`
+#### 4. ` PATCH /blogs/{blogId}`
 * *Desc* : update blog caracteristics
 * *Authenticated* : ***MUST***
 * *body* :  
@@ -270,7 +270,7 @@
     }
 ```
 
-#### 4. ` DELETE /{blogId}`
+#### 4. ` DELETE /blogs/{blogId}`
 * *Desc* : delete a blog
 * *Authenticated* : ***MUST***
 * *body* : None 
@@ -290,7 +290,7 @@
 ```
 
 ## C. POSTS related endpoints
-#### 1. ` POST /`
+#### 1. ` POST /posts`
 * *Desc* : create new post
 * *Authenticated* : ***MUST***
 * *body* :  
@@ -316,7 +316,7 @@
     }
 ```
 
-#### 2. ` POST /{postId}/clap`
+#### 2. ` POST /posts/{postId}/clap`
 * *Desc* : like a post
 * *Authenticated* : ***MUST***
 * *body* : None 
@@ -335,7 +335,7 @@
     }
 ```
 
-#### 3. ` GET /{postId}`
+#### 3. ` GET /posts/{postId}`
 * *Desc* : get a post detail
 * *Authenticated* : ***MUST NOT***
 * *body* : None 
@@ -360,7 +360,7 @@
     }
 ```
 
-#### 4. ` DELETE /{postId}`
+#### 4. ` DELETE /posts/{postId}`
 * *Desc* : delete a publication
 * *Authenticated* : ***MUST***
 * *body* : None 
@@ -379,7 +379,7 @@
     }
 ```
 
-#### 5. ` PATCH /{postId}`
+#### 5. ` PATCH /posts/{postId}`
 * *Desc* : update a post
 * *Authenticated* : ***MUST***
 * *body* : 
@@ -397,6 +397,157 @@
     }
 ```
 * *Failure* : Unauthorised, post not found, forbidden (the post doesn't belong to user blog)
+```
+    {
+        error: 'error message'
+    }
+```
+## C. COMMENTS related endpoints
+#### 1. ` GET /comments/of/{postId}`
+* *Desc* : get comments of a post
+* *Authenticated* : ***MUST NOT***
+* *body* : None 
+* *Query parameters* : postId
+* *Success* :  
+```
+    {
+        "data" : 
+            [
+                {
+                    "id",
+                    "content",
+                    "createdAt",
+                    "UserId",
+                    "PostId"
+                },
+                ...
+            ]
+    }
+```
+***OR***
+```
+    {
+        "data" : "no comment"
+    }
+```
+* *Failure* : maybe internal server only
+```
+    {
+        error: 'error message'
+    }
+```
+***! To be reviewed***
+#### 2. ` GET /comments/by` 
+* *Desc* : get comments by a user
+* *Authenticated* : ***MUST***
+* *body* : None 
+* *Query parameters* : None
+* *Success* :  
+```
+    {
+        "data" : 
+            [
+                {
+                    "id",
+                    "content",
+                    "createdAt",
+                    "UserId",
+                    "PostId"
+                },
+                ...
+            ]
+    }
+```
+***OR***
+```
+    {
+        "data" : "no comment"
+    }
+```
+* *Failure* : unauthorised
+```
+    {
+        error: 'error message'
+    }
+```
+***! To be reviewed : the postId should be on the uri***
+#### 3. ` POST /comments` 
+* *Desc* : create new comment for a post
+* *Authenticated* : ***MUST***
+* *body* : 
+```
+    {
+        "post" : "mandatory, post_id",
+        "content" : "mandatory, should not empty"
+    }
+``` 
+* *Query parameters* : None
+* *Success* :  
+```
+    {
+        message: "comment posted"
+    }
+```
+* *Failure* : unauthorised, invalid data, post not found
+```
+    {
+        error: 'error message'
+    }
+```
+
+#### 4. ` PATCH /comments/{commentId}/approve` 
+* *Desc* : to approve a comment
+* *Authenticated* : ***MUST*** and owner of the BLOG
+* *body* : None
+* *Query parameters* : commentId
+* *Success* :  
+```
+    {
+        "message" : "Comment approved"
+    }
+```
+* *Failure* : unauthorised, Comment not found, Forbidden (if the blog is not yours)
+```
+    {
+        error: 'error message'
+    }
+```
+
+#### 5. ` PATCH /comments/{commentId}` 
+* *Desc* : edit comment
+* *Authenticated* : ***MUST*** and owner of the comment
+* *body* : 
+```
+    {
+        "content" : "mandatory, not empty"
+    }
+```
+* *Query parameters* : commentId
+* *Success* :  
+```
+    {
+        "message" : "Comment updated"
+    }
+```
+* *Failure* : unauthorised, invalid data, Comment not found, Forbidden 
+```
+    {
+        error: 'error message'
+    }
+```
+
+#### 6. ` DELETE /comments/{commentId}` 
+* *Desc* : delete comment
+* *Authenticated* : ***MUST*** or be owner of the blog
+* *body* : None
+* *Query parameters* : commentId
+* *Success* :  
+```
+    {
+        "message" : "Comment deleted"
+    }
+```
+* *Failure* : unauthorised, Comment not found, Forbidden 
 ```
     {
         error: 'error message'
