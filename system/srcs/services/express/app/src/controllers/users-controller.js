@@ -1,7 +1,5 @@
-const user = require('../models/users');
-const {signupUser, loginUser, fetchUserFromDB, updateProfile, deleteUserFromDB, savePost, deletePostFromLibrary} = require('../services/user-services');
+const {signupUser, loginUser, fetchUserFromDB, updateProfile, deleteUserFromDB, savePost, deletePostFromLibrary, saveAvatar} = require('../services/user-services');
 const AppError = require("../errors/appError");
-const { User } = require('../models');
 
 const signup = async (req, res, next) => {
     try{
@@ -82,6 +80,17 @@ const handleDeleteSavedPost = async (req, res, next) => {
     }
 }
 
+const handleAvatarUpdate = async (req, res, next) => {
+    if (!req.file)
+        next(new AppError(404, "file not found"));
+    try {
+        await saveAvatar(req.user.sub, req.file.filename);
+        res.status(200).json({message : "avatar updated"});
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     signup,
     login,
@@ -89,5 +98,6 @@ module.exports = {
     handleProfilUpdate,
     handleSelfDelete,
     handleSaveToLibrary,
-    handleDeleteSavedPost
+    handleDeleteSavedPost,
+    handleAvatarUpdate
 };

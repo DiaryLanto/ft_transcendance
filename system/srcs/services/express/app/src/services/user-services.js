@@ -110,6 +110,16 @@ const deletePostFromLibrary = async (postId, userId) => {
     post.removeSavingUser(userId);
 }
 
+const saveAvatar = async (userId, avatarName) => {
+    const user = await User.findByPk(userId, {
+            attributes: ["photo"]
+    });
+    if (!user)
+        throw (new AppError(404, "user not found"));
+    user.photo = avatarName;
+    await user.save();
+}
+
 module.exports = { 
     signupUser,
     loginUser,
@@ -117,5 +127,6 @@ module.exports = {
     updateProfile,
     deleteUserFromDB,
     savePost,
-    deletePostFromLibrary
+    deletePostFromLibrary,
+    saveAvatar
 };

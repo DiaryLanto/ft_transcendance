@@ -1,4 +1,8 @@
 const {body} = require('express-validator')
+const multer = require('multer');
+
+const upload = multer({dest : "/app/upload/profile"});
+const avatarMiddleware = upload.single('profile_photo');
 
 const validateNewUser = [
     body('login')
@@ -32,5 +36,6 @@ const validateUserUpdate = [
 ];
 module.exports = {
     validateNewUser,
-    validateUserUpdate
+    validateUserUpdate,
+    avatarMiddleware
 };
