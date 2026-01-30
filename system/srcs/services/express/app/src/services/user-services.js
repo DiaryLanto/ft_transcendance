@@ -111,9 +111,7 @@ const deletePostFromLibrary = async (postId, userId) => {
 }
 
 const saveAvatar = async (userId, avatarName) => {
-    const user = await User.findByPk(userId, {
-            attributes: ["photo"]
-    });
+    const user = await User.findByPk(userId);
     if (!user)
         throw (new AppError(404, "user not found"));
     user.photo = avatarName;
