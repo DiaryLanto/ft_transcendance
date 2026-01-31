@@ -33,8 +33,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     photo: {
         type: DataTypes.STRING
+    },
+    follower_count: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
     }
-    
 });
 
 return User;

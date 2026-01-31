@@ -31,6 +31,21 @@ Post.belongsToMany(User, {through: 'Clapping'});
 
 User.belongsToMany(Post, {through: 'Library', as: "savedPost"});
 Post.belongsToMany(User, {through: 'Library', as: "savingUser"});
+
+User.belongsToMany(User, {
+    through: "Follow",
+    as: "followers",
+    foreignKey: "followee",
+    otherKey: "follower"
+});
+
+User.belongsToMany(User, {
+    through: "Follow",
+    as: "followees",
+    foreignKey: "follower",
+    otherKey: "followee"
+})
+
 /** COMMENT and POST relation **/
 Comment.belongsTo(Post);
 Post.hasMany(Comment);

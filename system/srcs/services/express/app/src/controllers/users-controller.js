@@ -1,4 +1,4 @@
-const {signupUser, loginUser, fetchUserFromDB, updateProfile, deleteUserFromDB, savePost, deletePostFromLibrary, saveAvatar} = require('../services/user-services');
+const {signupUser, loginUser, fetchUserFromDB, updateProfile, deleteUserFromDB, savePost, deletePostFromLibrary, saveAvatar, saveFollowingRequest} = require('../services/user-services');
 const AppError = require("../errors/appError");
 
 const signup = async (req, res, next) => {
@@ -91,6 +91,17 @@ const handleAvatarUpdate = async (req, res, next) => {
     }
 }
 
+const handleFollow = async (req, res, next) => {
+    try {
+        const followingUser = req.user.sub;
+        const followedUser = req.params.userId;
+        await saveFollowingRequest(followedUser, followingUser);
+        res.status(200).json({message:"user followed"});
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     signup,
     login,
@@ -99,5 +110,6 @@ module.exports = {
     handleSelfDelete,
     handleSaveToLibrary,
     handleDeleteSavedPost,
-    handleAvatarUpdate
+    handleAvatarUpdate,
+    handleFollow
 };
