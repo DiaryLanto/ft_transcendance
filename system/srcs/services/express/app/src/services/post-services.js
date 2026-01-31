@@ -3,9 +3,6 @@ const AppError = require('../errors/appError');
 
 const newPost = async (req) => {
     const blog = await Blog.findByPk(req.body.blog);
-
-    console.log(blog.id);
-    
     if (!blog)
         throw (new AppError(404, "Blog not found"));
     if (req.user.sub != blog.UserId)
