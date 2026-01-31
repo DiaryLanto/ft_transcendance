@@ -27,7 +27,9 @@ const getBlogPosts = async (req) => {
 
 const getPost = async (postId) => {
     const post = await Post.findByPk(postId, {
-        attributes: ["title", "content", "createdAt", "BlogId"]
+        attributes: {
+            exclude: ["createdAt", "updatedAt"]
+        }
     });
     return (post);
 }
@@ -72,11 +74,28 @@ const saveClapping = async (postId, UserId) => {
     }
 }
 
+const removeClapping = async (postId, userId) => {
+    const post = await Post.findByPk(postId);
+    if (!post)
+        throw (new AppError(404, "post not found"));
+    const clapped = await post.hasUser(userId);
+    if (clapped)
+    {
+        await post.removeUser(userId);
+        post.clap_count -= 1;
+        await post.save();
+        return (200);
+    }
+    else
+        return (403);
+}
+
 module.exports = {
     newPost,
     getBlogPosts,
     getPost,
     deletePostService,
     savePostUpdate,
-    saveClapping
+    saveClapping,
+    removeClapping
 };

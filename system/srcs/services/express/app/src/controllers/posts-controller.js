@@ -1,5 +1,13 @@
 const { post } = require("../routes/post-routes");
-const {newPost, getBlogPosts, getPost, deletePostService, savePostUpdate, saveClapping} = require("../services/post-services")
+const {
+    newPost,
+    getBlogPosts,
+    getPost,
+    deletePostService,
+    savePostUpdate,
+    saveClapping,
+    removeClapping
+} = require("../services/post-services")
 const AppError = require('../errors/appError');
 
 const createPost = async (req, res, next) => {
@@ -71,11 +79,26 @@ const handleClapping = async (req, res, next) => {
     }
 }
 
+const handleUnclapping = async (req, res, next) => {
+    try {
+        const postId = req.params.postId;
+        const userId = req.user.sub;
+        const status = await removeClapping(postId, userId);
+        if (status === 200)
+            res.status(200).json({message:"post unclapped"});
+        else if (status === 403)
+            res.status(403).json({warning:"post not clapped"});
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     createPost,
     fetchBlogPosts,
     getSpecificPost,
     deletePost,
     handlePostUpdate,
-    handleClapping
+    handleClapping,
+    handleUnclapping
 };

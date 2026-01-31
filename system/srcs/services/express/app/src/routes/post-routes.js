@@ -1,11 +1,20 @@
 const post_router = require('express').Router()
 const auth_validator = require('../middlewares/auth-middleware-validation');
-const {createPost, fetchBlogPosts, getSpecificPost, deletePost, handlePostUpdate, handleClapping} = require("../controllers/posts-controller");
+const {
+    createPost,
+    fetchBlogPosts,
+    getSpecificPost,
+    deletePost,
+    handlePostUpdate,
+    handleClapping,
+    handleUnclapping
+} = require("../controllers/posts-controller");
 const {validateNewPost, validatePostUpdate} = require("../middlewares/post-middleware");
 const error_checker = require("../middlewares/error-checking-validator");
 
 post_router.post("/", auth_validator, validateNewPost, error_checker, createPost);
 post_router.post("/:postId/clap", auth_validator, handleClapping);
+post_router.delete("/:postId/clap", auth_validator, handleUnclapping);
 post_router.get('/of/:blog_id', fetchBlogPosts);
 post_router.get('/:post_id', getSpecificPost);
 post_router.delete("/:post_id", auth_validator, deletePost);
