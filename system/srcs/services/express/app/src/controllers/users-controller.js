@@ -1,4 +1,15 @@
-const {signupUser, loginUser, fetchUserFromDB, updateProfile, deleteUserFromDB, savePost, deletePostFromLibrary, saveAvatar, saveFollowingRequest} = require('../services/user-services');
+const {
+    signupUser,
+    loginUser,
+    fetchUserFromDB,
+    updateProfile,
+    deleteUserFromDB,
+    savePost,
+    deletePostFromLibrary,
+    saveAvatar,
+    saveFollowingRequest,
+    removeFollowing
+} = require('../services/user-services');
 const AppError = require("../errors/appError");
 
 const signup = async (req, res, next) => {
@@ -102,6 +113,20 @@ const handleFollow = async (req, res, next) => {
     }
 }
 
+const handleUnfollow = async (req, res, next) => {
+    try {
+        const followeeId = req.params.userId;
+        const followerId = req.user.sub;
+        const status = await removeFollowing(followeeId, followerId);
+        if (status === 200)
+            res.status(200).json({message: "unfollowed successfully"});
+        else if (status === 403)
+            res.status(403).json({warning: "user not followed"});
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     signup,
     login,
@@ -111,5 +136,6 @@ module.exports = {
     handleSaveToLibrary,
     handleDeleteSavedPost,
     handleAvatarUpdate,
-    handleFollow
+    handleFollow,
+    handleUnfollow
 };

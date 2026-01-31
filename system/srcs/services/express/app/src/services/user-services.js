@@ -136,6 +136,23 @@ const saveFollowingRequest = async (followeeId, followerId) =>
         console.log("Already followed");
 }
 
+const removeFollowing = async (followeeId, followerId) => {
+    if (followeeId === followerId)
+        throw (new AppError(403, "forbidden"));
+    const followee = await User.findByPk(followeeId);
+    if (!followee)
+        return (new AppError(404, "user not found"));
+    const followed = await followee.hasFollower(followerId);
+    if (followed)
+    {
+        followee.removeFollower(followerId);
+        followee.follower_count -= 1;
+        await followee.save();
+        return (200);
+    }
+    return (403);
+}
+
 module.exports = { 
     signupUser,
     loginUser,
@@ -145,5 +162,6 @@ module.exports = {
     savePost,
     deletePostFromLibrary,
     saveAvatar,
-    saveFollowingRequest
+    saveFollowingRequest,
+    removeFollowing
 };
