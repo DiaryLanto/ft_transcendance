@@ -5,6 +5,7 @@ const User = require('./users')(sequelize, DataTypes);
 const Blog = require('./blog')(sequelize, DataTypes);
 const Post = require('./posts')(sequelize, DataTypes);
 const Comment = require('./comments')(sequelize, DataTypes);
+const TotpEnrollement = require('./totp-models.js')(sequelize, DataTypes);
 
 /** USER and BLOG relation **/
 User.hasMany(Blog);
@@ -50,10 +51,15 @@ User.belongsToMany(User, {
 Comment.belongsTo(Post);
 Post.hasMany(Comment);
 
+/** TOTP and USERS**/
+User.hasMany(TotpEnrollement);
+TotpEnrollement.belongsTo(User);
+
 module.exports = {
     sequelize,
     User,
     Blog,
     Post,
-    Comment
+    Comment,
+    TotpEnrollement
 };

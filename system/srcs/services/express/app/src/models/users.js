@@ -37,6 +37,14 @@ module.exports = (sequelize, DataTypes) => {
     follower_count: {
         type: DataTypes.INTEGER,
         defaultValue: 0
+    },
+    totp_secret: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    two_fa_enabled: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 });
 

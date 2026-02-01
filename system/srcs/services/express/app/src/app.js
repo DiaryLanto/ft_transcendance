@@ -7,6 +7,7 @@ const user_router = require('./routes/user-routes');
 const blog_router = require('./routes/blog-routes');
 const post_router = require('./routes/post-routes');
 const comment_router = require('./routes/comment-routes');
+const auth_router = require('./routes/auth-routes');
 const errorHandler = require('./middlewares/errorHandler');
 
 app.use(express.json());
@@ -15,6 +16,7 @@ app.use('/users', user_router);
 app.use('/blogs', blog_router);
 app.use('/posts', post_router);
 app.use('/comments', comment_router);
+app.use('/auth', auth_router);
 app.use(errorHandler);
 
 sequelize.authenticate().then(() => {

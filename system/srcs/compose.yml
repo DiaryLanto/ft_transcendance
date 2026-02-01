@@ -20,6 +20,8 @@ services:
       MARIADB_USER: '${MARIADB_USER}'
       MARIADB_PASSWORD: '${MARIADB_PASSWORD}'
       DB_HOST: '${DB_NAME}'
+      TZ: "Africa/Nairobi"
+
   react_dev:
     image: '${NGINX_NAME}_dev'
     container_name: '${NGINX_NAME}_dev'
@@ -74,6 +76,7 @@ services:
       MARIADB_DATABASE: '${MARIADB_DATABASE}'
       MARIADB_USER: '${MARIADB_USER}'
       MARIADB_PASSWORD: '${MARIADB_PASSWORD}'
+      TZ: "Africa/Nairobi"
     ports:
       - "3306:3306"
     networks:
