@@ -1,7 +1,7 @@
 const {body} = require('express-validator');
 const {jwtVerify} = require('jose');
 
-const auth_validation = async (req, res, next) => {
+const validate_user = async (req, res) => {
     const jwtSecret = new TextEncoder().encode("secret_test");
     const authHeader = req.headers.authorization;
     if (!authHeader)
@@ -12,11 +12,29 @@ const auth_validation = async (req, res, next) => {
     try {
         const {payload} = await jwtVerify(token, jwtSecret);
         req.user = payload;
-        next();
     } catch (error) {
         console.log(error);
-        res.status(401).json({message: "Unauthorised"});
+        return res.status(401).json({message: "Unauthorised, invalid token"});
     }
 }
 
-module.exports = auth_validation;
+const auth_validation = async (req, res, next) => {
+    await validate_user(req, res);
+    if (req.user === undefined)
+        return ;
+    if (req.user.auth_level === "password")
+        return res.status(401).json({message: "Unauthorised, temp token"});
+    next();
+}
+
+const auth_2fa_validation = async (req, res, next) => {
+    await validate_user(req, res);
+    if (req.user === undefined)
+        return ;
+    next();
+}
+
+module.exports = {
+    auth_validation,
+    auth_2fa_validation
+};

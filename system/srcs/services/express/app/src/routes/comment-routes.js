@@ -1,5 +1,5 @@
 const comment_router = require('express').Router();
-const auth_validation = require('../middlewares/auth-middleware-validation');
+const {auth_validation} = require('../middlewares/auth-middleware-validation');
 const {commentValidator, commentParamValidator, validateCommentUpdate} = require('../middlewares/comment-middleware');
 const error_checker = require('../middlewares/error-checking-validator');
 const {createPost, getCommentOfPost, handleCommentUpdate, handleCommentDeletion, handleGetCommentByUser, handleApproveComment} = require('../controllers/comments-controller');

@@ -61,7 +61,29 @@ const verifyDigits = async (digits, challengeId, userId) => {
     await user.save();
 }
 
+const loginWith2FA = async (userId, digits) => {
+    const user = User.findByPk(userId);
+    if (!user)
+        throw (new AppError(404, "user not found"));
+    const verified = speakeasy.totp.verify({
+        secret: user.totp_secret,
+        encoding: 'base32',
+        token: digits,
+        window: 1,
+    });
+    if (!verified)
+        throw (new AppError(403, "Forbidden, bad digits"));
+    const claim = { sub: client.id, login: client.login, email: client.email };
+    const token = await new SignJWT(claim)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('15m')
+    .sign(secret);
+    return {token};
+}
+
 module.exports = {
     generateOTPSecret,
-    verifyDigits
+    verifyDigits,
+    loginWith2FA
 };

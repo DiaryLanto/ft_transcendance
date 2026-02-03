@@ -38,8 +38,10 @@ const loginUser = async ({login, passwd}) => {
     const matched = await bcrypt.compare(passwd, client.password);
     if (!matched)
         throw error;
-    
-    const token = await new SignJWT({ sub: client.id, login: client.login, email: client.email })
+    let claim = { sub: client.id, login: client.login, email: client.email };
+    if (client.two_fa_enabled)
+        claim.auth_level = "password";
+    const token = await new SignJWT(claim)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('15m')

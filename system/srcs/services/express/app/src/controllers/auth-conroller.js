@@ -1,6 +1,7 @@
 const {
     generateOTPSecret,
-    verifyDigits
+    verifyDigits,
+    loginWith2FA
 } = require('../services/auth-services');
 
 const handle2FAEnable = async (req, res, next) => {
@@ -25,7 +26,22 @@ const handle2FAVerify = async (req, res, next) => {
     }
 }
 
+const handle2FAChallenge = async (req, res, next) => {
+    try {
+        const digits = req.body.digits;
+        const userId = req.user.sub;
+        const {token} = await loginWith2FA(userId, digits);
+        res.status(201).json({
+            message: "Login successful",
+            access_token: token 
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     handle2FAEnable,
-    handle2FAVerify
+    handle2FAVerify,
+    handle2FAChallenge
 };

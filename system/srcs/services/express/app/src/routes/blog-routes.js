@@ -1,7 +1,7 @@
 const error_checker = require('../middlewares/error-checking-validator');
 const blog_router = require('express').Router();
 const {blogValidator, validateBlogUpdate} = require("../middlewares/blog-validator");
-const auth_validation = require("../middlewares/auth-middleware-validation");
+const {auth_validation} = require("../middlewares/auth-middleware-validation");
 const {createBlog, getAllBlog, handleGetOneBlog, handleBlogUpate, handleBlogDelete} = require("../controllers/blogs-controller");
 
 
