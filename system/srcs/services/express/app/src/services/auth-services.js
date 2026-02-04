@@ -1,6 +1,7 @@
 const AppError = require('../errors/appError');
 const {TotpEnrollement, User} = require("../models");
 const {Op} = require('sequelize');
+const {SignJWT} = require('jose');
 const speakeasy = require('speakeasy');
 
 const generateOTPSecret = async (userId) => {
@@ -62,10 +63,12 @@ const verifyDigits = async (digits, challengeId, userId) => {
 }
 
 const loginWith2FA = async (userId, digits) => {
-    const user = User.findByPk(userId);
+    const  secret = new TextEncoder().encode("secret_test");
+    const user = await User.findByPk(userId);
     if (!user)
         throw (new AppError(404, "user not found"));
-    const verified = speakeasy.totp.verify({
+    console.log(user);
+    const verified = await speakeasy.totp.verify({
         secret: user.totp_secret,
         encoding: 'base32',
         token: digits,
@@ -73,7 +76,7 @@ const loginWith2FA = async (userId, digits) => {
     });
     if (!verified)
         throw (new AppError(403, "Forbidden, bad digits"));
-    const claim = { sub: client.id, login: client.login, email: client.email };
+    const claim = { sub: user.id, login: user.login, email: user.email };
     const token = await new SignJWT(claim)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()

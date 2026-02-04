@@ -29,11 +29,12 @@ const login = async (req, res, next) => {
         next (error);
     }
     try {
-        const {user, token} = await loginUser(req.body);
-        res.status(201).json({
-            message: "Login successful",
-            access_token: token 
-        });
+        const {totpRequired, token} = await loginUser(req.body);
+        let jsonMessage = {message: "Login successful", access_token: token};
+        if (totpRequired)
+            jsonMessage.message = "2FA authentication needed";
+        return res.status(201).json(jsonMessage);
+        
     } catch (error) {
         next(error);
     }

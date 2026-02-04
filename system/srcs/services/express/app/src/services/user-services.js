@@ -39,7 +39,8 @@ const loginUser = async ({login, passwd}) => {
     if (!matched)
         throw error;
     let claim = { sub: client.id, login: client.login, email: client.email };
-    if (client.two_fa_enabled)
+    const totpRequired = client.two_fa_enabled;
+    if (totpRequired)
         claim.auth_level = "password";
     const token = await new SignJWT(claim)
     .setProtectedHeader({ alg: 'HS256' })
@@ -49,7 +50,8 @@ const loginUser = async ({login, passwd}) => {
 
     return {
         client,
-        token
+        token,
+        totpRequired
     };
 }
 
