@@ -1,9 +1,8 @@
 const crypto = require ('crypto');
-const rawMessage = "I am a top secret message";
-const encryptionKey = "gpWR9E8pivM8AbhwWw7XxcJFnqCcacf2zRu0qGXXENM=";
 
 const encrypt = async (raw, algo, key, outputEncoding) => {
     const iv = crypto.randomBytes(16).toString('base64');
+    // console.log(key);
     const cipher = crypto.createCipheriv(algo, Buffer.from(key.key, key.encoding), Buffer.from(iv, 'base64'));
     let encrypted = cipher.update(raw.text, raw.encoding, outputEncoding);
     encrypted += cipher.final(outputEncoding);
@@ -17,22 +16,18 @@ const decrypt = async (encrypted, algo, key, outputEncoding) => {
     return decrypted;
 }
 
-const test = async () => {
-    try {
-        const algo = "aes-256-cbc";
-        const key = {key:encryptionKey, encoding: "base64"};
-        const decryptedEncoding = 'base64';
-        
-        const {encrypted, iv} = await encrypt({text:rawMessage, encoding:"utf-8"}, algo, key, decryptedEncoding);
-        console.log(encrypted);
-    
-        const toDecrypt = {data: encrypted, encoding:decryptedEncoding, iv: iv};
-        const decrypted = await decrypt(toDecrypt, algo, key, 'utf-8');
-        console.log(decrypted);
-    } catch (error) {
-        console.error(error);
-    }
+const totp_encrypt = {
+    algo : "aes-256-cbc",
+    key : "gpWR9E8pivM8AbhwWw7XxcJFnqCcacf2zRu0qGXXENM=",
+    key_encoding: "base64",
+    decryptedEncoding : 'base64'
 }
-
-test();
+        
+//         const {encrypted, iv} = await encrypt({text:rawMessage, encoding:"utf-8"}, algo, key, decryptedEncoding);
+//         const decrypted = await decrypt(toDecrypt, algo, key, 'utf-8');
+module.exports = {
+    encrypt,
+    decrypt,
+    totp_encrypt
+}
 

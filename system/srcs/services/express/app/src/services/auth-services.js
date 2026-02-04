@@ -3,6 +3,7 @@ const {TotpEnrollement, User} = require("../models");
 const {Op} = require('sequelize');
 const {SignJWT} = require('jose');
 const speakeasy = require('speakeasy');
+const {encrypt, decrypt, totp_encrypt} = require('../utils/encryption');
 
 const generateOTPSecret = async (userId) => {
     const secret = speakeasy.generateSecret({name:"ft_transcendance"});
@@ -57,7 +58,14 @@ const verifyDigits = async (digits, challengeId, userId) => {
     const user = await User.findByPk(userId);
     if (!user)
         throw (new AppError(404, "user not found"));
-    user.totp_secret = enrollment.temp_secret;
+    const {encrypted, iv} = await encrypt(
+        { text:enrollment.temp_secret, encoding:"utf-8" },
+        totp_encrypt.algo,
+        {key:totp_encrypt.key, encoding: totp_encrypt.key_encoding},
+        totp_encrypt.decryptedEncoding);
+    console.log(encrypted + iv);
+    // user.totp_secret = enrollment.temp_secret;
+    user.totp_secret = iv + encrypted;
     user.two_fa_enabled = true;
     await user.save();
 }
@@ -67,9 +75,19 @@ const loginWith2FA = async (userId, digits) => {
     const user = await User.findByPk(userId);
     if (!user)
         throw (new AppError(404, "user not found"));
-    console.log(user);
+    const iv = user.totp_secret.substring(0,24);
+    const encryptedSecret = user.totp_secret.substring(24);
+    const decryptedSecret = await decrypt(
+        {
+            data : encryptedSecret,
+            encoding: totp_encrypt.decryptedEncoding,
+            iv: iv
+        },
+        totp_encrypt.algo,
+        {key:totp_encrypt.key, encoding: totp_encrypt.key_encoding},
+        'utf-8');
     const verified = await speakeasy.totp.verify({
-        secret: user.totp_secret,
+        secret: decryptedSecret,
         encoding: 'base32',
         token: digits,
         window: 1,
