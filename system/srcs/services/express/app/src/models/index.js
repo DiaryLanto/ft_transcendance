@@ -6,6 +6,7 @@ const Blog = require('./blog')(sequelize, DataTypes);
 const Post = require('./posts')(sequelize, DataTypes);
 const Comment = require('./comments')(sequelize, DataTypes);
 const TotpEnrollement = require('./totp-models.js')(sequelize, DataTypes);
+const Message = require('./message.js')(sequelize, DataTypes);
 
 /** USER and BLOG relation **/
 User.hasMany(Blog);
@@ -54,6 +55,10 @@ Post.hasMany(Comment);
 /** TOTP and USERS**/
 User.hasMany(TotpEnrollement);
 TotpEnrollement.belongsTo(User);
+
+/***USERS and MESSAGES**/
+User.belongsToMany(User, {through: Message, as: "recipients", foreignKey: "sender", otherKey: "recipient"});
+User.belongsToMany(User, {through: Message, as: "senders", foreignKey: "recipient", otherKey: "sender"});
 
 module.exports = {
     sequelize,
