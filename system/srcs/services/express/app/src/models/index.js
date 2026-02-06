@@ -66,5 +66,6 @@ module.exports = {
     Blog,
     Post,
     Comment,
-    TotpEnrollement
+    TotpEnrollement,
+    Message
 };
